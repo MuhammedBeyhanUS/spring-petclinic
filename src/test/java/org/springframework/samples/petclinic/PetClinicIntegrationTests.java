@@ -28,6 +28,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.petclinic.owner.PetTypeRepository;
 import org.springframework.samples.petclinic.vet.VetRepository;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,12 +42,21 @@ public class PetClinicIntegrationTests {
 	private VetRepository vets;
 
 	@Autowired
+	private PetTypeRepository petTypes;
+
+	@Autowired
 	private RestTemplateBuilder builder;
 
 	@Test
 	void findAll() {
 		vets.findAll();
 		vets.findAll(); // served from cache
+	}
+
+	@Test
+	void findPetTypes() {
+		petTypes.findPetTypes();
+		petTypes.findPetTypes(); // served from cache
 	}
 
 	@Test
