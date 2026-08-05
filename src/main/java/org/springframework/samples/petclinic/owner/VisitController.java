@@ -53,6 +53,12 @@ class VisitController {
 		dataBinder.setDisallowedFields("id", "*.id");
 	}
 
+	@InitBinder("visit")
+	public void initVisitBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new VisitValidator());
+		dataBinder.setDisallowedFields("id", "*.id");
+	}
+
 	/**
 	 * Called before each and every @RequestMapping annotated method. 2 goals: - Make sure
 	 * we always have fresh data - Since we do not use the session scope, make sure that
@@ -97,10 +103,6 @@ class VisitController {
 	@PostMapping("/owners/{ownerId}/pets/{petId}/visits/new")
 	public String processNewVisitForm(@ModelAttribute Owner owner, @PathVariable int petId, @Valid Visit visit,
 			BindingResult result, RedirectAttributes redirectAttributes) {
-		if (visit.getDate() != null && !visit.getDate().isAfter(LocalDate.now())) {
-			result.rejectValue("date", "typeMismatch.visitDate");
-		}
-
 		if (result.hasErrors()) {
 			return "pets/createOrUpdateVisitForm";
 		}
