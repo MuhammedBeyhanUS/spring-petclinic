@@ -33,6 +33,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItem;
@@ -239,6 +241,14 @@ class OwnerControllerTests {
 			.andExpect(model().attributeHasFieldErrors("owner", "address"))
 			.andExpect(model().attributeHasFieldErrors("owner", "telephone"))
 			.andExpect(view().name("owners/createOrUpdateOwnerForm"));
+	}
+
+	@Test
+	void showOwnerWhenOwnerNotFound() {
+		given(this.owners.findById(999)).willReturn(Optional.empty());
+
+		Exception exception = assertThrows(Exception.class, () -> mockMvc.perform(get("/owners/{ownerId}", 999)));
+		assertInstanceOf(IllegalArgumentException.class, exception.getCause());
 	}
 
 	@Test
