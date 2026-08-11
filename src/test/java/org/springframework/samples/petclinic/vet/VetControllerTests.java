@@ -90,6 +90,15 @@ class VetControllerTests {
 	}
 
 	@Test
+	void showVetListHtmlIncludesPaginationModel() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/vets.html?page=1"))
+			.andExpect(status().isOk())
+			.andExpect(model().attribute("currentPage", 1))
+			.andExpect(model().attribute("totalPages", 1))
+			.andExpect(model().attribute("totalItems", 2L));
+	}
+
+	@Test
 	void showResourcesVetList() throws Exception {
 		ResultActions actions = mockMvc.perform(get("/vets").accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk());
