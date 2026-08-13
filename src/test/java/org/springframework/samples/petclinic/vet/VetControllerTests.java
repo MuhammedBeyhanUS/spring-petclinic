@@ -31,6 +31,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -96,6 +99,13 @@ class VetControllerTests {
 			.andExpect(model().attribute("currentPage", 1))
 			.andExpect(model().attribute("totalPages", 1))
 			.andExpect(model().attribute("totalItems", 2L));
+	}
+
+	@Test
+	void showVetListHtmlLoadsSpecialtiesForListView() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/vets.html?page=1"))
+			.andExpect(status().isOk())
+			.andExpect(model().attribute("listVets", hasItem(hasProperty("specialties", hasSize(1)))));
 	}
 
 	@Test
