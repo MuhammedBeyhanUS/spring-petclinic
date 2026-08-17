@@ -162,6 +162,18 @@ class OwnerControllerTests {
 	}
 
 	@Test
+	void processFindFormSuccessLoadsPetsForListView() throws Exception {
+		Owner secondOwner = new Owner();
+		secondOwner.setId(2);
+		secondOwner.setLastName("Davis");
+		Page<Owner> tasks = new PageImpl<>(List.of(george(), secondOwner));
+		when(this.owners.findByLastNameStartingWith(anyString(), any(Pageable.class))).thenReturn(tasks);
+		mockMvc.perform(get("/owners?page=1"))
+			.andExpect(status().isOk())
+			.andExpect(model().attribute("listOwners", hasItem(hasProperty("pets", hasSize(1)))));
+	}
+
+	@Test
 	void processFindFormByLastName() throws Exception {
 		Page<Owner> tasks = new PageImpl<>(List.of(george()));
 		when(this.owners.findByLastNameStartingWith(eq("Franklin"), any(Pageable.class))).thenReturn(tasks);
